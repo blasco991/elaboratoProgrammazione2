@@ -131,7 +131,7 @@ public class ModelEvaluation extends Model {
         valutation += 4 * ((numeroBianchi - newNumBianchi) + (numeroNeri - newNumNeri));
         //valutazione mossa errata
         if (canBeEaten(x, y)) {
-            valutation -= 5;
+            valutation -= 7;
         }
         //calcolo move factor
         float moveFactor = 1;
