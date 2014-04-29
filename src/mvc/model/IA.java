@@ -29,7 +29,7 @@ public class IA extends Thread {
     public void run() {
         super.run();
         try {
-            sleep(100);
+            sleep((int) (Math.random() * 1200 * 2));
         } catch (InterruptedException ex) {
         }
 

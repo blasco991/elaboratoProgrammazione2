@@ -33,36 +33,36 @@ public class ModelEvaluation extends Model {
 
     /**
      * Simula la mangiata, anche multipla
-     * @param i coordinata x iniziale
-     * @param i0 coordinata y iniziale
-     * @param i1 coordinata x finale
-     * @param i2 coordinata y finale
+     * @param x coordinata x iniziale
+     * @param y coordinata y iniziale
+     * @param xf coordinata x finale
+     * @param yf coordinata y finale
      * @return booleano che esprime il successo dell'operazione
      */
     @Override
-    public boolean eat(int i, int i0, int i1, int i2) {
-        if (canEat(i, i0)) {
-            for (int[] hint : getEatingHints(i, i0)) {
-                if ((i1 == hint[0]) && (i2 == hint[1])) {
+    public boolean eat(int x, int y, int xf, int yf) {
+        if (canEat(x, y)) {
+            for (int[] hint : getEatingHints(x, y)) {
+                if ((xf == hint[0]) && (yf == hint[1])) {
                     //se arrivo in fondo, devo creare un damone
-                    if (((i1 == 0) || (i1 == 8 - 1)) && ((tabellone[i][i0] == DAMA_BIANCA) || (tabellone[i][i0] == DAMA_NERA))) {
-                        tabellone[i1][i2] = tabellone[i][i0] + 2;
+                    if (((xf == 0) || (xf == 8 - 1)) && ((tabellone[x][y] == DAMA_BIANCA) || (tabellone[x][y] == DAMA_NERA))) {
+                        tabellone[xf][yf] = tabellone[x][y] + 2;
                         justDamone = true;
                     } else {
-                        tabellone[i1][i2] = tabellone[i][i0];
+                        tabellone[xf][yf] = tabellone[x][y];
                     }
-                    tabellone[(i + i1) / 2][(i0 + i2) / 2] = VUOTO;
-                    if ((tabellone[i][i0] % 2) == 0) {
+                    tabellone[(x + xf) / 2][(y + yf) / 2] = VUOTO;
+                    if ((tabellone[x][y] % 2) == 0) {
                         newNumNeri--;
                     } else {
                         newNumBianchi--;
                     }
-                    tabellone[i][i0] = VUOTO;
-                    while (canEat(i1, i2)) {
-                        int[] c = eatAgain(i1, i2);
-                        eat(i1, i2, c[0], c[1]);
-                        i1 = c[0];
-                        i2 = c[1];
+                    tabellone[x][y] = VUOTO;
+                    while (canEat(xf, yf)) {
+                        int[] c = eatAgain(xf, yf);
+                        eat(xf, yf, c[0], c[1]);
+                        xf = c[0];
+                        yf = c[1];
                     }
                     return true;
                 }
@@ -73,25 +73,25 @@ public class ModelEvaluation extends Model {
 
     /**
      * Simula la mossa
-     * @param i coordinata x iniziale
-     * @param i0 coordinata y iniziale
-     * @param i1 coordinata x finale
-     * @param i2 coordinata y finale
+     * @param x coordinata x iniziale
+     * @param y coordinata y iniziale
+     * @param xf coordinata x finale
+     * @param yf coordinata y finale
      * @return booleano che esprime il successo dell'operazione
      */
     @Override
-    public boolean move(int i, int i0, int i1, int i2) {
-        if (canMove(i, i0)) {
-            for (int[] hint : getHints(i, i0)) {
-                if ((i1 == hint[0]) && (i2 == hint[1])) {
+    public boolean move(int x, int y, int xf, int yf) {
+        if (canMove(x, y)) {
+            for (int[] hint : getHints(x, y)) {
+                if ((xf == hint[0]) && (yf == hint[1])) {
                     //se arrivo in fondo, devo creare un damone
-                    if (((i1 == 0) || (i1 == 8 - 1)) && (tabellone[i][i0] < 3)) {
-                        tabellone[i1][i2] = tabellone[i][i0] + 2;
+                    if (((xf == 0) || (xf == 8 - 1)) && (tabellone[x][y] < 3)) {
+                        tabellone[xf][yf] = tabellone[x][y] + 2;
                         justDamone = true;
                     } else {
-                        tabellone[i1][i2] = tabellone[i][i0];
+                        tabellone[xf][yf] = tabellone[x][y];
                     }
-                    tabellone[i][i0] = VUOTO;
+                    tabellone[x][y] = VUOTO;
                     return true;
                 }
             }
@@ -109,6 +109,7 @@ public class ModelEvaluation extends Model {
      * @return la valutazione della mossa
      */
     public int getEvaluation(int x, int y, int xf, int yf, boolean type) {
+        int x0 = x, y0 = y;
         //type = true -> move
         if (type) {
             this.move(x, y, xf, yf);
@@ -120,18 +121,22 @@ public class ModelEvaluation extends Model {
             x = xf;
             y = yf;
         }
-        int k = evaluate(x, y);
+        int k = evaluate(x, y, x0, y0);
         restoreData();
         return k;
     }
 
-    private int evaluate(int x, int y) {
+    private int evaluate(int x, int y, int x0, int y0) {
         valutation = 0;
         //valutazione mangiata
         valutation += 4 * ((numeroBianchi - newNumBianchi) + (numeroNeri - newNumNeri));
-        //valutazione mossa errata
+        //valutazione mossa errata (sconveniente)
         if (canBeEaten(x, y)) {
-            valutation -= 7;
+            valutation -= 9;
+        }
+        //valutazione DOVREI scappare (sconveniente)
+        if (canBeEaten(x0, y0)) { // equivale alla chiamate willBeEat()
+            valutation += 9;
         }
         //calcolo move factor
         float moveFactor = 1;
@@ -142,9 +147,11 @@ public class ModelEvaluation extends Model {
             //nero
             moveFactor += (1.0f/newNumNeri);
         }
-        //valutazione movimento
-        //dama : più ti avvicini a diventare damone, più il punteggio è alto. tengo anche conto della possibilità di mangiare una pedinna avversaria al prossimo round
-        //damone : la direzione di movimento è ininfluente, se è possibile bisogna essere vicini a una pedina avversaria per mangiarla
+        /* valutazione movimento
+        *  dama : più ti avvicini a diventare damone, più il punteggio è alto. 
+                    tengo anche conto della possibilità di mangiare una pedinna avversaria al prossimo round
+        *  damone : la direzione di movimento è ininfluente, se è possibile bisogna essere vicini a una pedina avversaria per mangiarla
+        */
         switch (tabellone[x][y]) {
             case Model.DAMA_NERA:
                 valutation += (int)Math.ceil(moveFactor*x);
@@ -184,9 +191,7 @@ public class ModelEvaluation extends Model {
 
     private void restoreData() {
         for (int i = 0; i < tabellone.length; i++) {
-            for (int j = 0; j < tabellone[i].length; j++) {
-                tabellone[i][j] = tabelloneOriginale[i][j];
-            }
+            System.arraycopy(tabelloneOriginale[i], 0, tabellone[i], 0, tabellone[i].length);
         }
     }
 
@@ -329,12 +334,8 @@ public class ModelEvaluation extends Model {
             }
         }
 
-        int[] a = new int[2];
         int[] b = new int[2];
         if (values.size() == 1) {
-
-            a[0] = values.get(0)[0];
-            a[1] = values.get(0)[1];
             b[0] = values.get(0)[2];
             b[1] = values.get(0)[3];
             return b;
@@ -342,9 +343,6 @@ public class ModelEvaluation extends Model {
         } else {
             Random r = new Random();
             int h = r.nextInt(values.size());
-
-            a[0] = values.get(h)[0];
-            a[1] = values.get(h)[1];
             b[0] = values.get(h)[2];
             b[1] = values.get(h)[3];
             return b;
