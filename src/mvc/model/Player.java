@@ -57,7 +57,7 @@ public class Player {
     }
 
     /**
-     * Segnala al giocatore quando inizia il suo turno.
+     * Segnala al giocatore quando inizia il suo turno
      * Controlla anche se ci sono mosse disponibili, in caso contrario la partita termina
      */
     public void wakeUp() {

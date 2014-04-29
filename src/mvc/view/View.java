@@ -24,7 +24,11 @@ import mvc.controller.Controller;
 import mvc.model.Model;
 
 /**
- *
+ * Rappresenta la finestra principale del programma
+ * Fornisce una rappresentazione del modello di gioco
+ * @see JFrame
+ * @see ActionListener
+ * @see Observer
  * @author Solomon Marian & Luca Negrini
  */
 public class View extends JFrame implements ActionListener, Observer {
@@ -41,6 +45,10 @@ public class View extends JFrame implements ActionListener, Observer {
     private PlayerLabel black, white;
     private final ImageIcon whiteCell, blackCell, border, whiteDama, blackDama, whiteDamone, blackDamone;
 
+    /**
+     * Costruttore di default
+     * @param bThis il modello da rappresentare
+     */
     public View(Model bThis) {
         movementEnabled = true;
         model = bThis;
@@ -101,10 +109,18 @@ public class View extends JFrame implements ActionListener, Observer {
         add(pannello, BorderLayout.CENTER);
     }
 
+    /**
+     * Restituisce l'etichetta che contiene il nome del giocatore nero
+     * @return l'etichetta
+     */
     public PlayerLabel getBlack() {
         return black;
     }
 
+    /**
+     * Restituisce l'etichetta che contiene il nome del giocatore bianco
+     * @return l'etichetta
+     */
     public PlayerLabel getWhite() {
         return white;
     }
@@ -134,10 +150,16 @@ public class View extends JFrame implements ActionListener, Observer {
         }
     }
 
+    /**
+     * Abilita l'interfaccia per le interazioni dell'utente
+     */
     public void enableInterface() {
         movementEnabled = true;
     }
 
+    /**
+     * Disabilita l'interfaccia
+     */
     public void disableInterface() {
         movementEnabled = false;
     }
@@ -178,6 +200,10 @@ public class View extends JFrame implements ActionListener, Observer {
         }
     }
 
+    /**
+     * Gestische gli eventi del mouse
+     * @param ae l'evento
+     */
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (movementEnabled) {
@@ -220,6 +246,11 @@ public class View extends JFrame implements ActionListener, Observer {
         }
     }
 
+    /**
+     * Aggiorna l'interfaccia in funzione ad un cambiamento del modello
+     * @param o il modello
+     * @param o1 non serve
+     */
     @Override
     public void update(Observable o, Object o1) {
         for (Component c : pannello.getComponents()) {
@@ -254,6 +285,10 @@ public class View extends JFrame implements ActionListener, Observer {
         pannello.repaint();
     }
 
+    /**
+     * Evidenzia le celle contenute nella lista passata come parametro
+     * @param possibleMoves le celle da evidenziare
+     */
     public void hilightPossibleMoves(ArrayList<int[]> possibleMoves) {
         for (int[] is : possibleMoves) {
             hilight(is[0], is[1], 3);

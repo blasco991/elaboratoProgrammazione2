@@ -11,7 +11,7 @@ public class CpuPlayer extends Player {
     private static int number = 0;
 
     /**
-     * Costruttore predefinito. 
+     * Costruttore predefinito 
      * @param controller il controller di riferimento
      * @param team il team di appartenenza
      */
@@ -22,8 +22,8 @@ public class CpuPlayer extends Player {
     }
 
     /**
-     * Sveglia il giocatore.
-     * Crea un thread separato in modo da non bloccare l'interfaccia durante l'elaborazione e lo fa partire.
+     * Sveglia il giocatore
+     * Crea un thread separato in modo da non bloccare l'interfaccia durante l'elaborazione e lo fa partire
      */
     @Override
     public void wakeUp() {

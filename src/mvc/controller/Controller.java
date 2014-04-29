@@ -6,7 +6,7 @@ import mvc.view.View;
 import mvc.model.*;
 
 /**
- *
+ * Classe che controlla l'andamento della partita
  * @author Solomon Marian & Luca Negrini
  */
 public class Controller {
@@ -20,6 +20,9 @@ public class Controller {
     private Round round;
     private static Controller currentController;
 
+    /**
+     * Crea il controllore della partita
+     */
     public Controller() {
         currentController = this;
         model = new Model();
@@ -30,10 +33,17 @@ public class Controller {
         round.init();
     }
 
+    /**
+     * Restituisce il controllore attuale
+     * @return il controllore
+     */
     public static Controller getController() {
         return currentController;
     }
 
+    /**
+     * Avvia una nuova partita
+     */
     public void restart() {
         view.dispose();
         model = new Model();
@@ -44,22 +54,42 @@ public class Controller {
         round.init();
     }
 
+    /**
+     * Restituisce la finestra di gioco
+     * @return la finestra di gioco
+     */
     public View getView() {
         return view;
     }
 
+    /**
+     * Restituisce la rappresentazione della partita corrente
+     * @return il modello corrente
+     */
     public Model getModel() {
         return model;
     }
 
+    /**
+     * Restituisce l'oggetto che gestisce i turni
+     * @return il gestore dei turni
+     */
     public Round getRound() {
         return round;
     }
 
+    /**
+     * Restituisce il giocatore bianco
+     * @return il giocatore bianco
+     */
     public Player getWhite() {
         return white;
     }
 
+    /**
+     * Restituisce il giocatore nero
+     * @return il giocatore nero
+     */
     public Player getBlack() {
         return black;
     }
@@ -120,6 +150,12 @@ public class Controller {
         }
     }
 
+    /**
+     * Interroga il modello per sapere se la pedina può muovere
+     * @param i la riga della pedina
+     * @param j la colonna della pedina
+     * @return la possibilità di muoversi della pedina
+     */
     public boolean canMove(int i, int j) {
         int x = round.getTurn() ? 0 : 1;
         if ((model.getTabellone()[i][j] % 2) == x) {
@@ -137,6 +173,12 @@ public class Controller {
 
     }
 
+    /**
+     * Comunica al modello di muovere una pedina
+     * @param sourceLocation contiene le coordinate della pedina
+     * @param destLocation contiene le coordinate della destinazione
+     * @return il risultato dell'operazione
+     */
     public boolean move(int[] sourceLocation, int[] destLocation) {
         int x = round.getTurn() ? 0 : 1;
         if ((model.getTabellone()[sourceLocation[0]][sourceLocation[1]] % 2) == x) {
@@ -156,10 +198,22 @@ public class Controller {
 
     }
 
+    /**
+     * Interroga il modello per ricevere la lista delle celle in cui la pedina si può muovere
+     * @param i la riga della cella
+     * @param j la colonna della cella
+     * @return la lista dei suggerimenti
+     */
     public ArrayList<int[]> getHints(int i, int j) {
         return model.getHints(i, j);
     }
 
+    /**
+     * Interroga il modello per sapere se la pedina può mangiare
+     * @param i la riga della pedina
+     * @param i0 la colonna della pedina
+     * @return la possibilità di mangiare della pedina
+     */
     public boolean canEat(int i, int i0) {
         int x = round.getTurn() ? 0 : 1;
         if ((model.getTabellone()[i][i0] % 2) == x) {
@@ -168,10 +222,22 @@ public class Controller {
         return false;
     }
 
+    /**
+     * Interroga il modello per ricevere la lista delle celle in cui la pedina può mangiare
+     * @param i la riga della cella
+     * @param i0 la colonna della cella
+     * @return la lista dei suggerimenti
+     */
     public ArrayList<int[]> getEatingHints(int i, int i0) {
         return model.getEatingHints(i, i0);
     }
 
+    /**
+     * Comunica al modello che una pedina deve mangiare
+     * @param sourceLocation contiene le coordinate della pedina
+     * @param destLocation contiene le coordinate della destinazione
+     * @return il risultato dell'operazione
+     */
     public boolean eat(int[] sourceLocation, int[] destLocation) {
         int x = round.getTurn() ? 0 : 1;
         if ((model.getTabellone()[sourceLocation[0]][sourceLocation[1]] % 2) == x) {
@@ -196,11 +262,17 @@ public class Controller {
 
     }
 
+    /**
+     * Abilita l'interfaccia per l'uso dell'utente
+     */
     public void enableInterface() {
         view.enableInterface();
         view.setVisible(true);
     }
 
+    /**
+     * Disabilita l'interfaccia
+     */
     public void disableInterface() {
         view.disableInterface();
     }

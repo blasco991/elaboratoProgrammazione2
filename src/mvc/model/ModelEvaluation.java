@@ -105,7 +105,7 @@ public class ModelEvaluation extends Model {
      * @param y coordinata y finale
      * @param xf coordinata x finale
      * @param yf coordinata y finale
-     * @param type tipo di mossa da simulare. true = move, false = eat
+     * @param type tipo di mossa da simulare     true = move, false = eat
      * @return la valutazione della mossa
      */
     public int getEvaluation(int x, int y, int xf, int yf, boolean type) {

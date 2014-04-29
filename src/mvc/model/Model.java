@@ -7,7 +7,7 @@ import mvc.controller.Controller;
 import mvc.view.View;
 
 /**
- * Classe che rappresenta il modello di gioco.
+ * Classe che rappresenta il modello di gioco
  * Fornisce una rappresentazione del campo di gioco e tutti i le funzioni che interagiscono con esso
  * @see Observable
  * @author Solomon Marian & Luca Negrini
