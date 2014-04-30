@@ -139,30 +139,16 @@ public class ModelEvaluation extends Model {
         valutation += 4 * ((numeroBianchi - newNumBianchi) + (numeroNeri - newNumNeri));
         //valutazione mangiata successiva
         if (canEatNext(x, y)) {
-            valutation += 3;
+            valutation += 4;
         }
         //valutazione mossa errata (sconveniente)
         if (canBeEaten(x, y)) {
-            valutation -= 10;
+            valutation -= 8;
         }
         //valutazione DOVREI scappare (conveniente)
         if (canBeEaten(x0, y0)) { // equivale alla chiamate willBeEat()
-            valutation += 8;
+            valutation += 4;
         }
-        //valutazione ho campo libero, incentivo lo spostamento (non troppo pero')
-        /*for (int i = 1; i < 3; i++) {
-            try {
-                danger = canBeEaten(x + i, y + i) || canBeEaten(x + i, y - i)
-                        || canBeEaten(x - i, y + i) || canBeEaten(x - i, y - i);
-                if (danger) {
-                    break;
-                }
-            } catch (Exception e) {
-            }
-        }
-        if (!danger) {
-            valutation++;
-        }*/
 
         //calcolo move factor (inserisco un fattore destabilizzante 1/numPedine)
         float moveFactor = 1;
