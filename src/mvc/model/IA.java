@@ -7,6 +7,7 @@ import mvc.controller.Controller;
 
 /**
  * Classe che rappresenta l'intelligienza del giocatore artificiale
+ *
  * @see Thread
  * @author Solomon Marian & Luca Negrini
  */
@@ -17,6 +18,7 @@ public class IA extends Thread {
 
     /**
      * Costruttore predefinito
+     *
      * @param controller il controller di riferimento della partita
      * @param team la squadra di riferimento
      */
@@ -29,7 +31,7 @@ public class IA extends Thread {
     public void run() {
         super.run();
         try {
-            sleep((int) (Math.random() * 1200 * 2));
+            sleep((int) (Math.random() * 100 * 2));
         } catch (InterruptedException ex) {
         }
 
@@ -75,9 +77,9 @@ public class IA extends Thread {
 
         //scelta mossa migliore
         int max = values.get(0)[5];
-        for (int i = 0; i < values.size(); i++) {
-            if (values.get(i)[5] > max) {
-                max = values.get(i)[5];
+        for (int[] value : values) {
+            if (value[5] > max) {
+                max = value[5];
             }
         }
 
@@ -151,43 +153,30 @@ public class IA extends Thread {
             int[] a = {i, i0, hint[0], hint[1], 0, me.getEvaluation(i, i0, hint[0], hint[1], false)};
             values.add(a);
         }
-
         //scelta mossa migliore
         int max = values.get(0)[5];
-        for (int k = 0; k < values.size(); k++) {
-            if (values.get(k)[5] > max) {
-                max = values.get(k)[5];
+        for (int[] value : values) {
+            if (value[5] > max) {
+                max = value[5];
             }
         }
-
         for (int k = 0; k < values.size(); k++) {
             if (values.get(k)[5] < max) {
                 values.remove(k);
                 k--;
             }
         }
-
-        int[] a = new int[2];
         int[] b = new int[2];
         if (values.size() == 1) {
-
-            a[0] = values.get(0)[0];
-            a[1] = values.get(0)[1];
             b[0] = values.get(0)[2];
             b[1] = values.get(0)[3];
             return b;
-
         } else {
             Random r = new Random();
             int h = r.nextInt(values.size());
-
-            a[0] = values.get(h)[0];
-            a[1] = values.get(h)[1];
             b[0] = values.get(h)[2];
             b[1] = values.get(h)[3];
             return b;
-
         }
     }
-
 }

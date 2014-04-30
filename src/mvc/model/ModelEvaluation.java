@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Classe che simula l'esecuzione di una mossa e ne produce una valutazione 
+ * Classe che simula l'esecuzione di una mossa e ne produce una valutazione
+ *
  * @author Solomon Marian & Luca Negrini
  */
 public class ModelEvaluation extends Model {
@@ -14,9 +15,11 @@ public class ModelEvaluation extends Model {
     private boolean justDamone;
 
     /**
-    * Costruttore del modello di valutazione
-    * @param tabellone il tabellone di partenza dal quale generare la simulazione
-    */
+     * Costruttore del modello di valutazione
+     *
+     * @param tabellone il tabellone di partenza dal quale generare la
+     * simulazione
+     */
     public ModelEvaluation(int[][] tabellone) {
         super(tabellone);
         tabelloneOriginale = new int[tabellone.length][tabellone[0].length];
@@ -33,6 +36,7 @@ public class ModelEvaluation extends Model {
 
     /**
      * Simula la mangiata, anche multipla
+     *
      * @param x coordinata x iniziale
      * @param y coordinata y iniziale
      * @param xf coordinata x finale
@@ -73,6 +77,7 @@ public class ModelEvaluation extends Model {
 
     /**
      * Simula la mossa
+     *
      * @param x coordinata x iniziale
      * @param y coordinata y iniziale
      * @param xf coordinata x finale
@@ -98,14 +103,15 @@ public class ModelEvaluation extends Model {
         }
         return false;
     }
-    
+
     /**
      * Avvia la valutazione della mossa
+     *
      * @param x coordinata x iniziale
      * @param y coordinata y finale
      * @param xf coordinata x finale
      * @param yf coordinata y finale
-     * @param type tipo di mossa da simulare     true = move, false = eat
+     * @param type tipo di mossa da simulare true = move, false = eat
      * @return la valutazione della mossa
      */
     public int getEvaluation(int x, int y, int xf, int yf, boolean type) {
@@ -127,43 +133,52 @@ public class ModelEvaluation extends Model {
     }
 
     private int evaluate(int x, int y, int x0, int y0) {
+        boolean danger = true;
         valutation = 0;
         //valutazione mangiata
         valutation += 4 * ((numeroBianchi - newNumBianchi) + (numeroNeri - newNumNeri));
+        //valutazione mangiata successiva
+        if (canEatNext(x, y)) {
+            valutation += 3;
+        }
         //valutazione mossa errata (sconveniente)
         if (canBeEaten(x, y)) {
-            valutation -= 9;
+            valutation -= 10;
         }
-        //valutazione DOVREI scappare (sconveniente)
+        //valutazione DOVREI scappare (conveniente)
         if (canBeEaten(x0, y0)) { // equivale alla chiamate willBeEat()
-            valutation += 9;
+            valutation += 8;
         }
-        //calcolo move factor
+        //valutazione ho campo libero, incentivo lo spostamento (non troppo pero')
+        for (int i = 0; i < 2; i++) {
+            try {
+                danger = canBeEaten(x + i, y + i) || canBeEaten(x + i, y - i)
+                        || canBeEaten(x - i, y + i) || canBeEaten(x - i, y - i);
+                if (danger) {
+                    break;
+                }
+            } catch (Exception e) {
+            }
+        }
+        if (!danger) {
+            valutation++;
+        }
+
+        //calcolo move factor (inserisco un fattore destabilizzante 1/numPedine)
         float moveFactor = 1;
-        if(tabellone[x][y] % 2 == 0){
-            //bianco
-            moveFactor += (1.0f/newNumBianchi);
-        } else {
-            //nero
-            moveFactor += (1.0f/newNumNeri);
-        }
+        moveFactor += (1.0f / (tabellone[x][y] % 2 == 0 ? newNumBianchi : newNumNeri));
+
         /* valutazione movimento
-        *  dama : più ti avvicini a diventare damone, più il punteggio è alto. 
-                    tengo anche conto della possibilità di mangiare una pedinna avversaria al prossimo round
-        *  damone : la direzione di movimento è ininfluente, se è possibile bisogna essere vicini a una pedina avversaria per mangiarla
-        */
+         *  dama : più ti avvicini a diventare damone, più il punteggio è alto. 
+         tengo anche conto della possibilità di mangiare una pedinna avversaria al prossimo round
+         *  damone : la direzione di movimento è ininfluente, se è possibile bisogna essere vicini a una pedina avversaria per mangiarla
+         */
         switch (tabellone[x][y]) {
             case Model.DAMA_NERA:
-                valutation += (int)Math.ceil(moveFactor*x);
-                if (canEatNext(x, y)) {
-                    valutation += 3;
-                }
+                valutation += (int) Math.ceil(moveFactor * x);
                 break;
             case Model.DAMA_BIANCA:
-                valutation += (int)Math.ceil(moveFactor*(7 - x));
-                if (canEatNext(x, y)) {
-                    valutation += 3;
-                }
+                valutation += (int) Math.ceil(moveFactor * (7 - x));
                 break;
             case Model.DAMONE_NERO:
                 if (justDamone) {
@@ -171,18 +186,12 @@ public class ModelEvaluation extends Model {
                 } else {
                     valutation += 2;
                 }
-                if (canEatNext(x, y)) {
-                    valutation += 3;
-                }
                 break;
             case Model.DAMONE_BIANCO:
                 if (justDamone) {
                     valutation += 5;
                 } else {
                     valutation += 2;
-                }
-                if (canEatNext(x, y)) {
-                    valutation += 3;
                 }
                 break;
         }
