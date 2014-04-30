@@ -150,7 +150,7 @@ public class ModelEvaluation extends Model {
             valutation += 8;
         }
         //valutazione ho campo libero, incentivo lo spostamento (non troppo pero')
-        for (int i = 0; i < 2; i++) {
+        /*for (int i = 1; i < 3; i++) {
             try {
                 danger = canBeEaten(x + i, y + i) || canBeEaten(x + i, y - i)
                         || canBeEaten(x - i, y + i) || canBeEaten(x - i, y - i);
@@ -162,7 +162,7 @@ public class ModelEvaluation extends Model {
         }
         if (!danger) {
             valutation++;
-        }
+        }*/
 
         //calcolo move factor (inserisco un fattore destabilizzante 1/numPedine)
         float moveFactor = 1;

@@ -13,8 +13,8 @@ import mvc.controller.Controller;
  */
 public class IA extends Thread {
 
-    private Controller controller;
-    private boolean team;
+    private final Controller controller;
+    private final boolean team;
 
     /**
      * Costruttore predefinito
@@ -29,9 +29,8 @@ public class IA extends Thread {
 
     @Override
     public void run() {
-        super.run();
         try {
-            sleep((int) (Math.random() * 100 * 2));
+            sleep((int) (Math.random() * 200 * 2));
         } catch (InterruptedException ex) {
         }
 
