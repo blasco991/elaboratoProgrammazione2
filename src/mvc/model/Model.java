@@ -147,7 +147,7 @@ public class Model extends Observable {
      */
     public boolean canMove(int x, int y) {
         boolean canMove = false;
-        //se c'è eccezione perché esce dall'array, non faccio niente, così è come se la cella on esistesse e non facesse nessun controllo
+        //se c'è eccezione perché esce dall'array, non faccio niente, così è come se la cella non esistesse e non facesse nessun controllo
         switch (tabellone[x][y]) {
             // casella vuota, niente da muovere
             case VUOTO:
@@ -168,6 +168,7 @@ public class Model extends Observable {
                 }
                 break;
             case DAMA_BIANCA:
+                // dama bianca, deve muovere in diagonale verso l'alto
                 try {
                     if (tabellone[x - 1][y - 1] == VUOTO) {
                         canMove = true;
@@ -181,6 +182,7 @@ public class Model extends Observable {
                 } catch (ArrayIndexOutOfBoundsException ex) {
                 }
                 break;
+            //damoni, possono muovere ovunque
             case DAMONE_NERO:
                 try {
                     if (tabellone[x - 1][y + 1] == VUOTO) {
@@ -264,6 +266,7 @@ public class Model extends Observable {
     public ArrayList<int[]> getHints(int i, int j) {
         //i = colonna, j = riga
         ArrayList<int[]> ret = new ArrayList<>();
+        //ogni possibile cella nella quale la pedina si può muovere viene inserita nella lista
         switch (tabellone[i][j]) {
             case DAMA_NERA:
                 try {
@@ -424,10 +427,10 @@ public class Model extends Observable {
         //se c'è eccezione perché esce dall'array, non faccio niente, così è come se la cella on esistesse e non facesse nessun controllo
         switch (tabellone[x][y]) {
             // casella vuota, niente da muovere
-            case 0:
+            case VUOTO:
                 return false;
             // dama nera, deve mangiare in diagonale verso il basso
-            case 1:
+            case DAMA_NERA:
                 try {
                     if (tabellone[x + 2][y + 2] == VUOTO && tabellone[x + 1][y + 1] == DAMA_BIANCA) {
                         canEat = true;
@@ -441,7 +444,8 @@ public class Model extends Observable {
                 } catch (ArrayIndexOutOfBoundsException ex) {
                 }
                 break;
-            case 2:
+            //dama bianca, deve mangiare in diagonale verso l'alto
+            case DAMA_BIANCA:
                 try {
                     if (tabellone[x - 2][y - 2] == VUOTO && tabellone[x - 1][y - 1] == DAMA_NERA) {
                         canEat = true;
@@ -455,7 +459,8 @@ public class Model extends Observable {
                 } catch (ArrayIndexOutOfBoundsException ex) {
                 }
                 break;
-            case 3:
+            //i damoni possono mangiare in qualsiasi posizione
+            case DAMONE_NERO:
                 try {
                     if (tabellone[x - 2][y + 2] == VUOTO && (tabellone[x - 1][y + 1] == DAMA_BIANCA || tabellone[x - 1][y + 1] == DAMONE_BIANCO)) {
                         canEat = true;
@@ -481,7 +486,7 @@ public class Model extends Observable {
                 } catch (ArrayIndexOutOfBoundsException ex) {
                 }
                 break;
-            case 4:
+            case DAMONE_BIANCO:
                 try {
                     if (tabellone[x - 2][y + 2] == VUOTO && (tabellone[x - 1][y + 1] == DAMA_NERA || tabellone[x - 1][y + 1] == DAMONE_NERO)) {
                         canEat = true;
@@ -520,6 +525,7 @@ public class Model extends Observable {
     public ArrayList<int[]> getEatingHints(int i, int j) {
         //i = colonna, j = riga
         ArrayList<int[]> ret = new ArrayList<>();
+        //ogni possibile cella nella quale la pedina si può muovere viene inserita nella lista
         switch (tabellone[i][j]) {
             case 1:
                 try {

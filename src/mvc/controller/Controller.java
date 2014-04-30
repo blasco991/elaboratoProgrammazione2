@@ -95,7 +95,7 @@ public class Controller {
     }
 
     public static void main(String args[]) {
-
+        //impostazione look and feel nimbus
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -111,6 +111,7 @@ public class Controller {
     }
 
     private void init() {
+        //scelta del tipo di partita e richiesta dei nomi dei giocatori
         String[] scelte = {"Player vs Player", "Player vs CPU", "CPU vs CPU"};
         Object scelta = JOptionPane.showInputDialog(null, "Selezionare il tipo di gioco", "Seleziona giocatori", JOptionPane.INFORMATION_MESSAGE, null, scelte, scelte[1]);
         if (scelta instanceof Integer) {

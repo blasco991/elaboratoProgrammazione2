@@ -37,6 +37,7 @@ public class IA extends Thread {
         controller.disableInterface();
         ArrayList<int[]> values = new ArrayList<>();//x y xf yf type valutation
 
+        //per ogni pedina che può fare qualcosa, creo una lista con le valutazioni di ogni mossa possibile
         int x = this.team ? 0 : 1;
         for (int i = 0; i < this.controller.getModel().getTabellone().length; i++) {
             for (int j = 0; j < this.controller.getModel().getTabellone()[i].length; j++) {
@@ -91,6 +92,7 @@ public class IA extends Thread {
 
         int[] a = new int[2];
         int[] b = new int[2];
+        //esecuzione mossa migliore
         if (values.size() == 1) {
             if (values.get(0)[4] == 1) {
                 a[0] = values.get(0)[0];
@@ -115,6 +117,7 @@ public class IA extends Thread {
                 }
             }
         } else {
+            //scelgo casualmente una delle mosse migliori e la eseguo
             Random r = new Random();
             int h = r.nextInt(values.size());
             if (values.get(h)[4] == 1) {
@@ -146,6 +149,7 @@ public class IA extends Thread {
     }
 
     private int[] eatAgain(int i, int i0) {
+        //valutazione su quale tra le mangiate consecutive è la migliore
         ArrayList<int[]> values = new ArrayList<>();//x y xf yf type valutation
         for (int[] hint : controller.getEatingHints(i, i0)) {
             ModelEvaluation me = new ModelEvaluation(controller.getModel().getTabellone());

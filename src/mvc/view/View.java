@@ -65,6 +65,7 @@ public class View extends JFrame implements ActionListener, Observer {
     }
 
     private void buildMenu() {
+        //creazione barra del menu
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("Opzioni");
         JMenuItem restart = new JMenuItem("Ricomincia");
@@ -126,18 +127,23 @@ public class View extends JFrame implements ActionListener, Observer {
     }
 
     private void hilight(int i, int j, int type) {
+        //evidenzia la cella indicata del colore specificato in type
         Border b = null;
         switch (type) {
             case 0:
+                //cella che contiene la pedina su cui ho cliccato
                 b = selectionBorder;
                 break;
             case 1:
+                //cella in cui la pedina selezionata si può muovere
                 b = hintBorder;
                 break;
             case 2:
+                //cella in cui la pedina selezionata può mangiare
                 b = eatingHintBorder;
                 break;
             case 3:
+                //cella che contiene una pedina che si può muovere o può mangiare. Serve per i suggerimenti di inizio turno
                 b = canDoSomethingBorder;
                 break;
         }
@@ -145,6 +151,7 @@ public class View extends JFrame implements ActionListener, Observer {
     }
 
     private void reset() {
+        //toglie tutti i bordi dalle celle
         for (Component c : pannello.getComponents()) {
             ((JButton) c).setBorder(null);
         }
